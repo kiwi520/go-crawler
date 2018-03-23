@@ -9,16 +9,33 @@ type ConcurrentEngine struct {
 
 type Scheduler interface {
 	Submit(Request)
-	ConfigureMasterWorkerChan(chan Request)
+	WorkerChan() chan Request
+	//queue版不需要此方法
+	//ConfigureMasterWorkerChan(chan Request)
+	ReadyNotifier
+	Run()
 }
 
+type ReadyNotifier interface {
+	WorkerReady(chan Request)
+}
+
+
 func (e *ConcurrentEngine) Run(sends ...Request){
-	in := make(chan Request)
+	//queue版
 	out := make(chan ParseResult)
-	e.Scheduler.ConfigureMasterWorkerChan(in)
+	e.Scheduler.Run()
+    //并发coroutine版
+	//in := make(chan Request)
+	//out := make(chan ParseResult)
+	//e.Scheduler.ConfigureMasterWorkerChan(in)
 
 	for i:= 0; i<e.WorkerCount ;i++  {
-		createWorker(in, out)
+		//queue并发版
+		createWorker(e.Scheduler.WorkerChan(),out,e.Scheduler)
+
+		//并发coroutine版
+		//createWorker(in, out)
 	}
 
 	for _,r := range sends{
@@ -39,9 +56,12 @@ func (e *ConcurrentEngine) Run(sends ...Request){
 	}
 }
 
-func createWorker(in chan  Request,out chan ParseResult)  {
+//queue并发版
+func createWorker(in chan Request,out chan ParseResult, ready ReadyNotifier)  {
+	//in := make(chan Request)
 	go func() {
 		for {
+			ready.WorkerReady(in)
 			request := <- in
 			result,err := worker(request)
 			if err != nil {
@@ -51,3 +71,17 @@ func createWorker(in chan  Request,out chan ParseResult)  {
 		}
 	}()
 }
+
+//并发coroutine版
+//func createWorker(in chan  Request,out chan ParseResult)  {
+//	go func() {
+//		for {
+//			request := <- in
+//			result,err := worker(request)
+//			if err != nil {
+//				continue
+//			}
+//			out <- result
+//		}
+//	}()
+//}

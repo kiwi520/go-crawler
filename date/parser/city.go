@@ -3,13 +3,16 @@ package parser
 import (
 	"crawler/engine"
 	"regexp"
+	//"fmt"
 )
 
-const cityRe  = `<a href="(http://album.zhenai.com/u/[0-9]+)"[^>]*>([^<]+)</a>`
+var cityRe  = regexp.MustCompile(`<a href="(http://album.zhenai.com/u/[0-9]+)"[^>]*>([^<]+)</a>`)
+
+var cityPageRe = regexp.MustCompile(`href="(http://www.zhenai.com/zhenghun/[0-9a-z]+/[0-9]+)">下一页</a>`)
 
 func ParseCity(contents []byte) engine.ParseResult  {
-	re := regexp.MustCompile(cityRe)
-	matches := re.FindAllSubmatch(contents,-1)
+
+	matches := cityRe.FindAllSubmatch(contents,-1)
 	result := engine.ParseResult{}
 	for _,v := range matches {
 		name := string(v[2])
@@ -20,6 +23,17 @@ func ParseCity(contents []byte) engine.ParseResult  {
 				return ParseProfile(c,name)
 			},
 		})
+	}
+
+	matchess := cityPageRe.FindSubmatch(contents)
+
+	for k,v := range matchess{
+		if k != 0{
+			result.Requests = append(result.Requests,engine.Request{
+				Url:string(v),
+				ParseFunc:ParseCity,
+			})
+		}
 	}
 	return result
 }
