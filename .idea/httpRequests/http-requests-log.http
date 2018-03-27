@@ -1,0 +1,60 @@
+GET http://localhost:9200/kiwi/test/_search?pretty=&q=nodeJs
+Accept: */*
+Content-Type: application/json
+
+<> 2018-03-24T022156.200.json
+
+###
+
+GET http://localhost:9200/kiwi/test/_search
+Accept: */*
+Content-Type: application/json
+
+<> 2018-03-24T021308.200.json
+
+###
+
+PUT http://localhost:9200/kiwi/test/2
+Accept: */*
+Content-Type: application/json
+
+{      "name":"nodeJs",      "version":8.6  }
+
+<> 2018-03-24T021250.201.json
+
+###
+
+GET http://localhost:9200/kiwi/test/1
+Accept: */*
+Content-Type: application/json
+
+<> 2018-03-24T021111.200.json
+
+###
+
+GET http://localhost:9200/kiwi/test/1
+Accept: */*
+Content-Type: application/json
+
+<> 2018-03-24T021108.200.json
+
+###
+
+PUT http://localhost:9200/kiwi/test/1
+Accept: */*
+Content-Type: application/json
+
+{   "name":"golang",   "version":1.10 }
+
+<> 2018-03-24T020133.201.json
+
+###
+
+GET http://localhost:9200
+Accept: */*
+Content-Type: application/json
+
+<> 2018-03-24T013121.200.json
+
+###
+

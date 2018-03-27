@@ -1,0 +1,26 @@
+{
+  "took": 111,
+  "timed_out": false,
+  "_shards": {
+    "total": 5,
+    "successful": 5,
+    "skipped": 0,
+    "failed": 0
+  },
+  "hits": {
+    "total": 1,
+    "max_score": 0.2876821,
+    "hits": [
+      {
+        "_index": "kiwi",
+        "_type": "test",
+        "_id": "2",
+        "_score": 0.2876821,
+        "_source": {
+          "name": "nodeJs",
+          "version": 8.6
+        }
+      }
+    ]
+  }
+}

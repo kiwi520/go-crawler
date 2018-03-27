@@ -1,0 +1,11 @@
+{
+  "_index": "kiwi",
+  "_type": "test",
+  "_id": "1",
+  "_version": 1,
+  "found": true,
+  "_source": {
+    "name": "golang",
+    "version": 1.10
+  }
+}
